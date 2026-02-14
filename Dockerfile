@@ -68,11 +68,17 @@ RUN chown -R sail:sail /var/www/html
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
+# Prepare .env for build (Vite often needs VITE_ variables to be present)
+RUN cp .env.example .env
+
+# Show Node and NPM versions for debugging
+RUN node -v && npm -v
+
 # Install Node dependencies
 RUN npm ci
 
-# Build frontend assets (increasing memory limit for Vite)
-RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
+# Build frontend assets (increasing memory limit for Vite and adding verbose output)
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build -- --debug
 
 EXPOSE 80/tcp
 
