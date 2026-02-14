@@ -68,14 +68,21 @@ RUN chown -R sail:sail /var/www/html
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
-# Prepare .env for build (Vite often needs VITE_ variables to be present)
+# Prepare .env for build
 RUN cp .env.example .env
+
+# Create necessary Laravel directories and set permissions
+RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache \
+    && chmod -R 777 storage bootstrap/cache
 
 # Show Node and NPM versions for debugging
 RUN node -v && npm -v
 
 # Install Node dependencies
 RUN npm ci
+
+# Explicitly generate Wayfinder types (this often fails silently within Vite)
+RUN php artisan wayfinder:generate --with-form || echo "Wayfinder generation failed, proceeding anyway..."
 
 # Build frontend assets (increasing memory limit for Vite and adding verbose output)
 RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build -- --debug
