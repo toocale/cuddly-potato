@@ -66,7 +66,7 @@ RUN chmod +x /usr/local/bin/start-container
 RUN chown -R sail:sail /var/www/html
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # Install Node dependencies and build assets
 RUN npm install && npm run build
