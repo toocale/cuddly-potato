@@ -69,10 +69,10 @@ RUN chown -R sail:sail /var/www/html
 RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # Install Node dependencies
-RUN npm install
+RUN npm ci
 
-# Build frontend assets
-RUN npm run build
+# Build frontend assets (increasing memory limit for Vite)
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 EXPOSE 80/tcp
 
