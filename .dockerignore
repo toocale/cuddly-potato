@@ -18,7 +18,7 @@ auth.json
 .nova
 .vscode
 .zed
-docker/
+# docker/  <-- Removed this to allow COPY commands in Dockerfile
 Dockerfile
 compose.yaml
 README.md
