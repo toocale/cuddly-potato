@@ -65,6 +65,12 @@ RUN chmod +x /usr/local/bin/start-container
 # Ensure permissions are correct
 RUN chown -R sail:sail /var/www/html
 
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Install Node dependencies and build assets
+RUN npm install && npm run build
+
 EXPOSE 80/tcp
 
 ENTRYPOINT ["start-container"]
